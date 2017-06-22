@@ -24,11 +24,11 @@ def calcNormPMI(count1,count2,countJoint,countTotal):
 		
 		# if temp>=1:
 		pmi=log((float(countJoint)*countTotal)/(count1*count2))
-
+		normPMI=pmi/log(float(countTotal)/countJoint)
 		# else:
 		# 	temp=1/temp
 		# 	pmi=-log(temp)	
-		return pmi
+		return normPMI
 
 
 def writeDictToFile(dict,countBound,countTotal,outFileName):#,f):
