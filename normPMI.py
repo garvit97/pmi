@@ -2,37 +2,24 @@ import sys
 from math import log
 
 
-def calcPMI(count1,count2,countJoint,countTotal):
+def calcPMI(count1,count2,countJoint,countTotal): #Function to calculate pmi. count1 is number of times word occured, count2 is number of times sentence boundary occurs, countJoint is number of times word occurs at specific position w.r.t. sentence boundary, countTotal is total number of words in document.
 	if count1==0 or count2==0 or countJoint==0 or countTotal==0:
 		return -99
 	else:
-		#print(str(count1)+" "+str(count2)+" "+str(countJoint)+" "+str(countTotal))
-		
-		# if temp>=1:
-		pmi=log((float(countJoint)*countTotal)/(count1*count2))
-
-		# else:
-		# 	temp=1/temp
-		# 	pmi=-log(temp)	
+		pmi=log((float(countJoint)*countTotal)/(count1*count2))	
 		return pmi
 
 
-def calcNormPMI(count1,count2,countJoint,countTotal):
+def calcNormPMI(count1,count2,countJoint,countTotal): #Function to calculate normalised PMI
 	if count1==0 or count2==0 or countJoint==0 or countTotal==0:
 		return -1
 	else:
-		#print(str(count1)+" "+str(count2)+" "+str(countJoint)+" "+str(countTotal))
-		
-		# if temp>=1:
 		pmi=log((float(countJoint)*countTotal)/(count1*count2))
-		normPMI=pmi/log(float(countTotal)/countJoint)
-		# else:
-		# 	temp=1/temp
-		# 	pmi=-log(temp)	
+		normPMI=pmi/log(float(countTotal)/countJoint)	
 		return normPMI		
 
 
-def writeDictToFile(dict,countBound,countTotal,outFileName):#,f):
+def writeDictToFile(dict,countBound,countTotal,outFileName): #Write all the contents of Dictionary to file in unsorted order
 	print(outFileName)
 	f=open(outFileName,'w')
 	for x in dict:
@@ -46,14 +33,13 @@ def writeDictToFile(dict,countBound,countTotal,outFileName):#,f):
 		f.write('\t')
 		f.write(str(countTotal))
 		f.write('\t')
-		#f.write(str(calcPMI(dict[x][1],countBound,dict[x][0],countTotal)))
 		f.write(dict[x][2])
 		f.write('\n')
 		
 	f.close()
 
 
-def sortBy():
+def sortBy(): #Function to identify the parameter which is the basis for sorting
 	if sortby=="countWord":
 		return 1
 	elif sortby=="countJoint":
@@ -63,24 +49,8 @@ def sortBy():
 	elif sortby=="normPMI":
 		return 3
 
-# def sortDictAndPrint(diction,outFileName):
-# 	print(outFileName)
-# 	f=open(outFileName,'w')
-# 	for i in sorted(diction,key=diction.__getitem__[1],reverse=True):
-# 		f.write(str(i))
-# 		f.write('\t')
-# 		f.write(str(diction[i][0]))
-# 		f.write('\t')
-# 		f.write(str(diction[i][1]))
-# 		f.write('\t')
-# 		f.write(str(diction[i][2]))
-# 		f.write('\t')
-# 		f.write(str(diction[i][3]))
-# 		f.write('\n')
-		
-# 	f.close()
 
-def sortDictAndPrint(diction,outFileName):
+def sortDictAndPrint(diction,outFileName): #Function to sort the dict and write in file
 	print(outFileName)
 	f=open(outFileName,'w')
 	
@@ -100,9 +70,9 @@ def sortDictAndPrint(diction,outFileName):
 	f.close()	
 
 global sortby
-filename=str(sys.argv[1])#input("Enter filename: ")
-hist=int(sys.argv[2])#int(input( "Enter number of h:"))
-forw=int(sys.argv[3])#int(input("Enter number of j:"))
+filename=str(sys.argv[1])#Enter filename
+hist=int(sys.argv[2])#Enter number of h
+forw=int(sys.argv[3])#Enter number of j
 sortby=sys.argv[4] # options- countWord,countJoint,pmi,normPMI
 size=hist+forw
 
@@ -117,7 +87,7 @@ for line in file:
 		wordList.append(word)
 
 
-numWords=len(wordList)
+numWords=len(wordList)  #Total num of words in document
 countBound=0
 
 for i in range (numWords):
@@ -149,12 +119,4 @@ for i in range(hist,size):
 		dictList[i][x][2]=calcPMI(dictList[i][x][1],countBound,dictList[i][x][0],numWords)
 		dictList[i][x][3]=calcNormPMI(dictList[i][x][1],countBound,dictList[i][x][0],numWords)
 	sortDictAndPrint(dictList[i],outFileName)
-#outputFileList=[]
-# for i in range(0,hist):
-# 	outFileName="h"+str(i+1)+".txt"
-# 	writeDictToFile(dictList[i],countBound,numWords,outFileName)
-	
-# for i in range(hist,size):
-# 	outFileName="j"+str(i-hist+1)+".txt"
-# 	writeDictToFile(dictList[i],countBound,numWords,outFileName)
 
